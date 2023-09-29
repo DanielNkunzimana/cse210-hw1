@@ -1,0 +1,37 @@
+What is version control and why is it important?
+Your response must:
+•	Explain the meaning of Version Control
+Version control system it is system that helps us to keep track of changes made to file and collaborate 
+with others on projects. It is commonly used in software development including in tools like Git and 
+GitHub. It is also used by GitHub and tracks the history of changes and managing changes to code has 
+been made. As programmers make changes to the project any earlier version of the project can be regained
+at any time. programmers can review project history to find out, which changes are made? And then after
+it send changes to destinated repository on GitHub account.
+
+•	Highlight a benefit of Version Control
+
+-Version control track changes: version control system like Git allows you to track every change made 
+to your files, include who made the change and when. this makes it easier to understand the history of 
+your project and revert back to a specific version if needed.
+
+-collaborate with version control, multiple people can work on the same project simultaneously. 
+Each person can make their own changes and then merge them together. This makes it easier to collaborate
+and avoid conflicts when multiple people are working on the same files.
+
+-Branching and merging: version control systems allow you to create branches, which are separate copies 
+of your project where you can experiment with new features or fixes without affecting the main codebase.
+
+-backup and recovery: version control act as a backup system for code. If something goes wrong or if you 
+delete a file, you can easily retrieve an earlier version from the version control system.
+
+•	Provide an application of Version Control. This means, provide an example of how Version Control 
+could be used.
+
+Version control software could provide a collaborative platform where teams can work on a project and 
+automatically receive updated files. Alternatively, the team could use a cloud drive service to upload,
+ download and edit files occurring at the same time to ensure everyone is working on the same version.
+
+•	Show a command used in Version Control (for example a Git command)
+
+Git command which is commonly used is ‘git commit’. This command is used to save your changes to the 
+repository with a descriptive message.
