@@ -191,8 +191,7 @@ private List<string> assignedCardNumbers = new List<string>();
 
     private string GenerateUniqueCardNumber()
     {
-        // Generate a unique card number, for example, by using a random number or a combination of user information.
-        // This is a simplified example; you can use a more complex algorithm to generate unique card numbers.
+        
 
          Library library = new Library();
 
@@ -289,8 +288,36 @@ class Catalog
 {
     private List<Book> catalogBooks = new List<Book>();
 
-    // Methods for categorizing and searching for books
+    // Method to add a book to the catalog
+    public void AddBookToCatalog(Book book)
+    {
+        catalogBooks.Add(book);
+        Console.WriteLine($"Book added to the catalog: {book.Title} by {book.Author}");
+    }
+
+    // Method to list all books in the catalog
+    public List<Book> ListAllBooks()
+    {
+        return catalogBooks;
+    }
+
+    // Method to search for books by title
+    public List<Book> SearchByTitle(string title)
+    {
+        return catalogBooks.FindAll(book => book.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // Method to search for books by author
+    public List<Book> SearchByAuthor(string author)
+    {
+        return catalogBooks.FindAll(book => book.Author.Contains(author, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // I can even add more search methods (e.g., by genre, publication year) as needed but next time.
+
+    // Other methods for categorizing and searching I can add it here.
 }
+
 
 class Transaction
 {
@@ -298,7 +325,91 @@ class Transaction
     public Book Book { get; private set; }
     public DateTime DueDate { get; private set; }
 
-    // Methods for tracking borrowing history
+    public Transaction(User user, Book book, DateTime dueDate)
+    {
+        User = user;
+        Book = book;
+        DueDate = dueDate;
+    }
+
+    // Method to log a new transaction
+    public void LogTransaction()
+    {
+        Console.WriteLine($"{User.Name} has borrowed the book: {Book.Title}");
+        Console.WriteLine($"Due Date: {DueDate}");
+    }
+
+    // Method to log the return of a book
+    public void LogReturn()
+    {
+        Console.WriteLine($"{User.Name} has returned the book: {Book.Title}");
+        Console.WriteLine($"Returned on: {DateTime.Now}");
+    }
+
+    // Method to check if the book is overdue
+    public bool IsOverdue()
+    {
+        return DateTime.Now > DueDate;
+    }
 }
+
+class LibraryMember
+{
+    public string MemberName { get; set; }
+    public string MemberCardNumber { get; set; }
+    public List<Book> BorrowedBooks { get; private set; }
+
+    public LibraryMember(string name, string cardNumber)
+    {
+        MemberName = name;
+        MemberCardNumber = cardNumber;
+        BorrowedBooks = new List<Book>();
+    }
+
+    public void BorrowBook(Book book)
+    {
+        if (BorrowedBooks.Count >= 3)
+        {
+            Console.WriteLine("You have reached the maximum limit of borrowed books (3 books). Please return a book before borrowing another one.");
+        }
+        else
+        {
+            BorrowedBooks.Add(book);
+            Console.WriteLine($"{MemberName} has borrowed the book: {book.Title}");
+        }
+    }
+
+    public void ReturnBook(Book book)
+    {
+        if (BorrowedBooks.Contains(book))
+        {
+            BorrowedBooks.Remove(book);
+            Console.WriteLine($"{MemberName} has returned the book: {book.Title}");
+        }
+        else
+        {
+            Console.WriteLine($"{MemberName} does not have the book: {book.Title} to return.");
+        }
+    }
+}
+
+class Patron
+{
+    public string Name { get; set; }
+    public string LibraryCardNumber { get; set; }
+    public string ContactDetails { get; set; }
+    public List<Transaction> BorrowedBooksHistory { get; set; }
+
+    public Patron(string name, string cardNumber, string contactDetails)
+    {
+        Name = name;
+        LibraryCardNumber = cardNumber;
+        ContactDetails = contactDetails;
+        BorrowedBooksHistory = new List<Transaction>();
+    }
+
+    // I can even add many methods to manage user-related actions, such as updating contact details.
+}
+
 
 }
