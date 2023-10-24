@@ -1,22 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 class Program
 {
     static void Main(string[] args)
     {
         Library library = new Library();
-        
+        Catalog catalog = new Catalog();
+
         while (true)
         {
             Console.WriteLine("Welcome to Library Management System");
-            Console.WriteLine("please choose what you would like to do in Library");
+            Console.WriteLine("Please choose what you would like to do in the library:");
             Console.WriteLine("1. Add Book");
             Console.WriteLine("2. List Books");
-            Console.WriteLine("3. Remove Books");
-            Console.WriteLine("4. Borrow book");
-            Console.WriteLine("5. Return book");
-            Console.WriteLine("6. quit");
+            Console.WriteLine("3. Remove Book");
+            Console.WriteLine("4. Borrow Book");
+            Console.WriteLine("5. Return Book");
+            Console.WriteLine("6. Manage Patrons");
+            Console.WriteLine("7. Manage Catalog");
+            Console.WriteLine("8. Quit");
+
             string choice = Console.ReadLine();
 
             switch (choice)
@@ -28,6 +33,7 @@ class Program
                     string author = Console.ReadLine();
                     Book newBook = new Book(title, author);
                     library.AddBook(newBook);
+                    catalog.AddBookToCatalog(newBook);
                     Console.WriteLine("Book added to the library.");
                     break;
 
@@ -39,76 +45,176 @@ class Program
                         Console.WriteLine($"{book.Title} by {book.Author}");
                     }
                     break;
-                
+
                 case "3":
                     Console.WriteLine("Enter the title of the book to remove: ");
                     string bookTitleToRemove = Console.ReadLine();
                     library.RemoveBook(bookTitleToRemove);
+                    catalog.RemoveBookFromCatalog(bookTitleToRemove);
                     break;
 
                 case "4":
-        // Code for borrowing a book.
                     Console.WriteLine("Enter your library card number: ");
                     string userCardNumber = Console.ReadLine();
                     User user = library.GetUserByLibraryCardNumber(userCardNumber);
 
                     if (user == null)
-                       {
-                           Console.WriteLine("User not found. Please check your library card number.");
-                       }
+                    {
+                        Console.WriteLine("User not found. Please check your library card number.");
+                    }
                     else
-                        {
-                           Console.WriteLine("Enter the title of the book to borrow: ");
-                           string bookTitleToBorrow = Console.ReadLine();
-                           Book bookToBorrow = library.GetBookByTitle(bookTitleToBorrow);
+                    {
+                        Console.WriteLine("Enter the title of the book to borrow: ");
+                        string bookTitleToBorrow = Console.ReadLine();
+                        Book bookToBorrow = library.GetBookByTitle(bookTitleToBorrow);
 
-                    if (bookToBorrow == null)
-                       {
-                           Console.WriteLine("Book not found. Please check the book title.");
-                       }
-                    else
-                       {
-                          user.BorrowBook(bookToBorrow);
-                       }
+                        if (bookToBorrow == null)
+                        {
+                            Console.WriteLine("Book not found. Please check the book title.");
                         }
+                        else
+                        {
+                            user.BorrowBook(bookToBorrow);
+                        }
+                    }
                     break;
 
                 case "5":
-        // Code for returning a book.
-                Console.WriteLine("Enter your library card number: ");
-                userCardNumber = Console.ReadLine();
-                user = library.GetUserByLibraryCardNumber(userCardNumber);
+                    Console.WriteLine("Enter your library card number: ");
+                    userCardNumber = Console.ReadLine();
+                    user = library.GetUserByLibraryCardNumber(userCardNumber);
 
-                if (user == null)
-                   {
-                     Console.WriteLine("User not found. Please check your library card number.");
-                   }
-                else
-                   {
-                       Console.WriteLine("Enter the title of the book to return: ");
-                       string bookTitleToReturn = Console.ReadLine();
-                       Book bookToReturn = library.GetBookByTitle(bookTitleToReturn);
-
-                if (bookToReturn == null)
-                   {
-                       Console.WriteLine("Book not found. Please check the book title.");
-                   }
-                else
+                    if (user == null)
                     {
-                         user.ReturnBook(bookToReturn);
+                        Console.WriteLine("User not found. Please check your library card number.");
                     }
-                }
-                break;
+                    else
+                    {
+                        Console.WriteLine("Enter the title of the book to return: ");
+                        string bookTitleToReturn = Console.ReadLine();
+                        Book bookToReturn = library.GetBookByTitle(bookTitleToReturn);
+
+                        if (bookToReturn == null)
+                        {
+                            Console.WriteLine("Book not found. Please check the book title.");
+                        }
+                        else
+                        {
+                            user.ReturnBook(bookToReturn);
+                        }
+                    }
+                    break;
+
+                case "6":
+                    Console.WriteLine("Choose patron management option:");
+                    Console.WriteLine("1. Add Patron");
+                    Console.WriteLine("2. List Patrons");
+                    Console.WriteLine("3. Remove Patron");
+                    string patronChoice = Console.ReadLine();
+
+                    switch (patronChoice)
+                    {
+                        case "1":
+                            Console.WriteLine("Enter patron name: ");
+                            string patronName = Console.ReadLine();
+                            Patron newPatron = new Patron(patronName);
+                            library.AddPatron(newPatron);
+                            Console.WriteLine($"Patron {patronName} has been added.");
+                            break;
+
+                        case "2":
+                            Console.WriteLine("Patrons in the library:");
+                            List<Patron> patrons = library.GetPatrons();
+                            foreach (Patron patron in patrons)
+                            {
+                                Console.WriteLine(patron.Name);
+                            }
+                            break;
+
+                        case "3":
+                            Console.WriteLine("Enter the name of the patron to remove: ");
+                            string patronNameToRemove = Console.ReadLine();
+                            library.RemovePatron(patronNameToRemove);
+                            Console.WriteLine($"Patron {patronNameToRemove} has been removed.");
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid choice for patron management.");
+                            break;
+                    }
+                    break;
+
+                case "7":
+                    Console.WriteLine("Choose catalog management option:");
+                    Console.WriteLine("1. List All Books in Catalog");
+                    Console.WriteLine("2. Search for Books by Title");
+                    Console.WriteLine("3. Search for Books by Author");
+                    string catalogChoice = Console.ReadLine();
+
+                    switch (catalogChoice)
+                    {
+                        case "1":
+                            Console.WriteLine("Books in the catalog:");
+                            List<Book> catalogBooks = catalog.ListAllBooks();
+                            foreach (Book book in catalogBooks)
+                            {
+                                Console.WriteLine($"{book.Title} by {book.Author}");
+                            }
+                            break;
+
+                        case "2":
+                            Console.WriteLine("Enter the title to search for: ");
+                            string searchTitle = Console.ReadLine();
+                            List<Book> searchResultByTitle = catalog.SearchByTitle(searchTitle);
+                            if (searchResultByTitle.Any())
+                            {
+                                Console.WriteLine("Matching books in the catalog:");
+                                foreach (Book book in searchResultByTitle)
+                                {
+                                    Console.WriteLine($"{book.Title} by {book.Author}");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No matching books found.");
+                            }
+                            break;
+
+                        case "3":
+                            Console.WriteLine("Enter the author to search for: ");
+                            string searchAuthor = Console.ReadLine();
+                            List<Book> searchResultByAuthor = catalog.SearchByAuthor(searchAuthor);
+                            if (searchResultByAuthor.Any())
+                            {
+                                Console.WriteLine("Matching books in the catalog:");
+                                foreach (Book book in searchResultByAuthor)
+                                {
+                                    Console.WriteLine($"{book.Title} by {book.Author}");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No matching books found.");
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid choice for catalog management.");
+                            break;
+                    }
+                    break;
+
+                case "8":
+                    Console.WriteLine("Goodbye!");
+                    return;
 
                 default:
-                         Console.WriteLine("Invalid choice. Please select a valid option.");
-                break;
-                case "6":
-               // Code for quitting the program (as shown in the original code).
-                Console.WriteLine("Goodbye!");
-                return;
+                    Console.WriteLine("Invalid choice. Please select a valid option.");
+                    break;
             }
-        }}
+        }
+    }
+}
 
 class Book
 {
@@ -126,11 +232,7 @@ class Library
 {
     private List<User> users = new List<User>();
     private List<Book> books = new List<Book>();
-
-    public void AddUser(User user)
-    {
-        users.Add(user);
-    }
+    private List<Patron> patrons = new List<Patron>();
 
     public void AddBook(Book book)
     {
@@ -144,101 +246,43 @@ class Library
 
     public User GetUserByLibraryCardNumber(string cardNumber)
     {
-        User user1 = new User("User1", "12345");
-        User user2 = new User("User2", "67890");
-
         return users.Find(user => user.LibraryCardNumber == cardNumber);
     }
 
     public Book GetBookByTitle(string title)
     {
-        return books.Find(book => book.Title == title);
+        return books.Find(book => book.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
     }
-    
-public void RemoveBook(string title)
-{
-    Book bookToRemove = books.Find(b => b.Title == title);
-    if (bookToRemove != null)
+
+    public void RemoveBook(string title)
     {
-        books.Remove(bookToRemove);
-        Console.WriteLine($"{title} has been removed from the library.");
+        Book bookToRemove = books.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+        if (bookToRemove != null)
+        {
+            books.Remove(bookToRemove);
+        }
     }
-    else
+
+    public void AddPatron(Patron patron)
     {
-        Console.WriteLine($"{title} not found in the library.");
+        patrons.Add(patron);
+    }
+
+    public List<Patron> GetPatrons()
+    {
+        return patrons;
+    }
+
+    public void RemovePatron(string name)
+    {
+        Patron patronToRemove = patrons.Find(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (patronToRemove != null)
+        {
+            patrons.Remove(patronToRemove);
+        }
     }
 }
 
-private List<string> assignedCardNumbers = new List<string>();
-
-    public User CreateUser(string name, string cardNumber)
-    {
-        //string cardNumber;
-        do
-        {
-            cardNumber = GenerateUniqueCardNumber();
-        } while (assignedCardNumbers.Contains(cardNumber));
-
-        assignedCardNumbers.Add(cardNumber);
-
-        User newUser = new User(name, cardNumber);
-        // Add the user to your user list or database.
-        User user1 = new User("User1", "12345");
-        User user2 = new User("User2", "67890");
-
-        return newUser;
-    }
-
-    private string GenerateUniqueCardNumber()
-    {
-        
-
-         Library library = new Library();
-
-        // Create users
-        User user1 = new User("User1", "12345");
-        User user2 = new User("User2", "67890");
-
-        // Create books
-        //Book book1 = new Book("Book1");
-       // Book book2 = new Book("Book2");
-
-        library.AddUser(user1);
-        library.AddUser(user2);
-
-        //library.AddBook(book1);
-        //library.AddBook(book2);
-
-        // Example usage of GetUserByLibraryCardNumber
-        string cardNumber = "12345";
-        User foundUser = library.GetUserByLibraryCardNumber(cardNumber);
-
-        if (foundUser != null)
-        {
-            Console.WriteLine($"User Found: {foundUser.Name}");
-        }
-        else
-        {
-            Console.WriteLine("User Not Found");
-        }
-
-        // Example usage of GetBookByTitle
-        string bookTitle = "Book1";
-        Book foundBook = library.GetBookByTitle(bookTitle);
-
-        if (foundBook != null)
-        {
-            Console.WriteLine($"Book Found: {foundBook.Title}");
-        }
-        else
-        {
-            Console.WriteLine("Book Not Found");
-        }
-    
-
-        return Guid.NewGuid().ToString("N").Substring(0, 8); // Generates an 8-character unique string.
-    }        
-    }
 class User
 {
     public string Name { get; set; }
@@ -250,7 +294,6 @@ class User
         Name = name;
         LibraryCardNumber = cardNumber;
         BorrowedBooks = new List<Book>();
-        
     }
 
     public void BorrowBook(Book book)
@@ -263,7 +306,6 @@ class User
         {
             BorrowedBooks.Add(book);
             Console.WriteLine($"{Name} has borrowed the book: {book.Title}");
-            
         }
     }
 
@@ -278,46 +320,63 @@ class User
         {
             Console.WriteLine($"{Name} does not have the book: {book.Title} to return.");
         }
-
     }
-    
+}
 
+class Patron
+{
+    public string Name { get; set; }
+    public string LibraryCardNumber { get; set; }
+    public string ContactDetails { get; set; }
+    public List<Transaction> BorrowedBooksHistory { get; set; }
+
+    public Patron(string patronName)
+    {
+        Name = patronName;
+    }
+
+    public Patron(string name, string cardNumber, string contactDetails)
+    {
+        Name = name;
+        LibraryCardNumber = cardNumber;
+        ContactDetails = contactDetails;
+        BorrowedBooksHistory = new List<Transaction>();
+    }
 }
 
 class Catalog
 {
     private List<Book> catalogBooks = new List<Book>();
 
-    // Method to add a book to the catalog
     public void AddBookToCatalog(Book book)
     {
         catalogBooks.Add(book);
-        Console.WriteLine($"Book added to the catalog: {book.Title} by {book.Author}");
     }
 
-    // Method to list all books in the catalog
     public List<Book> ListAllBooks()
     {
         return catalogBooks;
     }
 
-    // Method to search for books by title
     public List<Book> SearchByTitle(string title)
     {
-        return catalogBooks.FindAll(book => book.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+        return catalogBooks.FindAll(book => book.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
     }
 
-    // Method to search for books by author
     public List<Book> SearchByAuthor(string author)
     {
-        return catalogBooks.FindAll(book => book.Author.Contains(author, StringComparison.OrdinalIgnoreCase));
+        return catalogBooks.FindAll(book => book.Author.Equals(author, StringComparison.OrdinalIgnoreCase));
     }
 
-    // I can even add more search methods (e.g., by genre, publication year) as needed but next time.
-
-    // Other methods for categorizing and searching I can add it here.
+    public void RemoveBookFromCatalog(string title)
+    {
+        Book bookToRemove = catalogBooks.Find(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+        if (bookToRemove != null)
+        {
+            catalogBooks.Remove(bookToRemove);
+        }
+    }
 }
-
 
 class Transaction
 {
@@ -332,21 +391,18 @@ class Transaction
         DueDate = dueDate;
     }
 
-    // Method to log a new transaction
     public void LogTransaction()
     {
         Console.WriteLine($"{User.Name} has borrowed the book: {Book.Title}");
         Console.WriteLine($"Due Date: {DueDate}");
     }
 
-    // Method to log the return of a book
     public void LogReturn()
     {
         Console.WriteLine($"{User.Name} has returned the book: {Book.Title}");
         Console.WriteLine($"Returned on: {DateTime.Now}");
     }
 
-    // Method to check if the book is overdue
     public bool IsOverdue()
     {
         return DateTime.Now > DueDate;
@@ -393,23 +449,3 @@ class LibraryMember
     }
 }
 
-class Patron
-{
-    public string Name { get; set; }
-    public string LibraryCardNumber { get; set; }
-    public string ContactDetails { get; set; }
-    public List<Transaction> BorrowedBooksHistory { get; set; }
-
-    public Patron(string name, string cardNumber, string contactDetails)
-    {
-        Name = name;
-        LibraryCardNumber = cardNumber;
-        ContactDetails = contactDetails;
-        BorrowedBooksHistory = new List<Transaction>();
-    }
-
-    // I can even add many methods to manage user-related actions, such as updating contact details.
-}
-
-
-}
