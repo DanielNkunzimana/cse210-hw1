@@ -206,6 +206,7 @@ class Program
 
                 case "8":
                     Console.WriteLine("Goodbye!");
+                    Console.WriteLine("thank you for coming in our library");
                     return;
 
                 default:
